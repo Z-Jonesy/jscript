@@ -1,12 +1,10 @@
 // elemek összegyűjtése
 
 let inputNameFilter = document.getElementById('nameFilter');
-let listItemList = document.getElementById('nameFilter');
+let resultList = document.getElementById('resultList');
 
 // változók
 let nameFilter = '';
-
-
 let itemList = [
     'Raging bull',
     'Aliens',
@@ -38,7 +36,7 @@ RenderList();
 
 // render list
 function RenderList() {
-    listItemList.innerText = '';
+    resultList.innerText = '';
     console.clear();
 
     let filteredItemList = itemList.filter(function (item, index) {
@@ -52,14 +50,14 @@ function RenderList() {
 
     filteredItemList.forEach(function (item, index) {
         RenderListItem(item);
-        console.log(index);
+        console.log(item, index);
     });
 }
 
 function RenderListItem(text) {
     let newListItem = document.createElement('li');
     newListItem.innerText = text;
-    listItemList.appendChild(newListItem);
+    resultList.appendChild(newListItem);
 }
 
 function OnInputKeyup() {
