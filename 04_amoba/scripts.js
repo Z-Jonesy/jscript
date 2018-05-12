@@ -1,5 +1,5 @@
 // konstansok
-let GRIDSIZE = 9;
+let GRIDSIZE = 9; 
 
 // változók
 let cursorRow = 0,
