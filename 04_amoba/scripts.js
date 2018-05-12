@@ -1,5 +1,5 @@
 // konstansok
-let GRIDSIZE = 9; 
+let GRIDSIZE = 9;
 
 // változók
 let cursorRow = 0,
@@ -11,6 +11,7 @@ let cursorRow = 0,
 let tableGrid = document.getElementById('grid');
 let spanStepCount = document.getElementById('stepCount');
 let spanCurrentMark = document.getElementById('currentMark');
+let spanErrorMark = document.getElementById('errorMark');
 
 // feliratkozás
 window.addEventListener('keydown', OnKeyDown);
@@ -52,24 +53,29 @@ function MoveCursor(direction) {
             break;
     }
     SetCursor(cursorRow, cursorCol);
+    spanErrorMark.className = '';
+    spanErrorMark.innerText = '';
 }
 
 function PlaceMark() {
-    if (finished) {
-        return;
+
+    // csak ha a cella üres
+    if (GetCellValue(cursorRow, cursorCol) == '') {
+
+
+        SetCellValue(cursorRow, cursorCol, GetCurrentMark());
+        if (IsGameFinished()) {
+            finished = true;
+            TriggerGameFinished();
+        }
+        if (finished) {
+            return;
+        }
+        IncrementStepCount();
+    } else {
+    spanErrorMark.className = 'errorText';
+    spanErrorMark.innerText = 'Ott már van jelölés';
     }
-
-    // todo: van-e már a cellában valami
-
-    SetCellValue(cursorRow, cursorCol, GetCurrentMark());
-    if (IsGameFinished()) {
-        finished = true;
-        TriggerGameFinished();
-    }
-
-    IncrementStepCount();
-
-
 }
 
 function SetCellValue(rowIndex, colIndex, value) {
@@ -172,11 +178,34 @@ function IsGameFinished() {
             if (CountValues(cellValues, 'O') == 5) {
                 return true;
             }
-            //todo: vízszintes ellenőrzés
+            // vízszintes ellenőrzés
+
         }
 
     }
 
+    for (let colIndex = 2; colIndex < GRIDSIZE - 2; colIndex++) {
+        for (let rowIndex = 0; rowIndex < GRIDSIZE - 2; rowIndex++) {
+            let cellValues = [
+                GetCellValue(rowIndex, colIndex - 2),
+                GetCellValue(rowIndex, colIndex - 1),
+                GetCellValue(rowIndex, colIndex),
+                GetCellValue(rowIndex, colIndex + 1),
+                GetCellValue(rowIndex, colIndex + 2),
+            ]
+            console.log(cellValues);
+            if (CountValues(cellValues, 'X') == 5) {
+                return true;
+            }
+            if (CountValues(cellValues, 'O') == 5) {
+                return true;
+            }
+
+        }
+
+    }
+
+    return false;
 }
 
 function CountValues(valueCollection, valueToCount) {

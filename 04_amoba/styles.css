@@ -13,3 +13,8 @@ td.cursor {
 td:not(.cursor) {
     border: 2px solid grey;
 }
+
+.errorText {
+    color: red;
+    font-weight: bold;
+}
