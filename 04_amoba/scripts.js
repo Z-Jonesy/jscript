@@ -4,7 +4,7 @@ let GRIDSIZE = 9;
 // változók
 let cursorRow = 0,
     cursorCol = 0,
-    setpCount = 0,
+    stepCount = 0,
     finished = false;
 
 // elemek összegyűjtése
@@ -19,7 +19,7 @@ window.addEventListener('gameFinished', OnGameFinished);
 // init
 RenderGrid();
 MoveCursor();
-
+UpdateCurrentMarkSpan();
 
 // renderelés
 function RenderGrid() {
@@ -55,6 +55,20 @@ function MoveCursor(direction) {
 }
 
 function PlaceMark() {
+    if (finished) {
+        return;
+    }
+
+    // todo: van-e már a cellában valami
+
+    SetCellValue(cursorRow, cursorCol, GetCurrentMark());
+    if (IsGameFinished()) {
+        finished = true;
+        TriggerGameFinished();
+    }
+
+    IncrementStepCount();
+
 
 }
 
@@ -64,16 +78,32 @@ function SetCellValue(rowIndex, colIndex, value) {
         cellCollection = rowCollection[rowIndex].children,
         cell = cellCollection[colIndex];
 
-        cell.innerText = value;
+    cell.innerText = value;
 }
+
 function GetCellValue(rowIndex, colIndex) {
     // cella összeszedése
     let rowCollection = tableGrid.children,
         cellCollection = rowCollection[rowIndex].children,
         cell = cellCollection[colIndex];
 
-        return cell.innerText;
+    return cell.innerText;
 }
+
+function IncrementStepCount() {
+    stepCount++;
+    spanStepCount.innerText = stepCount;
+    UpdateCurrentMarkSpan();
+}
+
+function GetCurrentMark() {
+    return stepCount % 2 == 0 ? 'X' : 'O';
+}
+
+function UpdateCurrentMarkSpan() {
+    spanCurrentMark.innerText = GetCurrentMark();
+}
+
 
 function SetCursor(rowIndex, colIndex) {
     if (finished) {
@@ -117,5 +147,45 @@ function OnKeyDown(event) {
 }
 
 function OnGameFinished() {
+    const MESSAGE = "Játék vége, nyertes: " + GetCurrentMark();
+    alert(MESSAGE);
+}
 
+function IsGameFinished() {
+    //függőleges ellenőrzés
+    for (let rowIndex = 2; rowIndex < GRIDSIZE - 2; rowIndex++) {
+        for (let colIndex = 0; colIndex < GRIDSIZE - 2; colIndex++) {
+
+            //összeszedjük az értékekek
+            let cellValues = [
+                GetCellValue(rowIndex - 2, colIndex),
+                GetCellValue(rowIndex - 1, colIndex),
+                GetCellValue(rowIndex, colIndex),
+                GetCellValue(rowIndex + 1, colIndex),
+                GetCellValue(rowIndex + 2, colIndex),
+            ];
+            // X vizsgálata
+            if (CountValues(cellValues, 'X') == 5) {
+                return true;
+            }
+            // O vizsgálata
+            if (CountValues(cellValues, 'O') == 5) {
+                return true;
+            }
+            //todo: vízszintes ellenőrzés
+        }
+
+    }
+
+}
+
+function CountValues(valueCollection, valueToCount) {
+    return valueCollection.filter(function (value) {
+        return value == valueToCount;
+    }).length;
+}
+
+function TriggerGameFinished() {
+    let event = new Event('gameFinished');
+    window.dispatchEvent(event);
 }
