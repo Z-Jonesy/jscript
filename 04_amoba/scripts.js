@@ -193,7 +193,7 @@ function IsGameFinished() {
                 GetCellValue(rowIndex, colIndex + 1),
                 GetCellValue(rowIndex, colIndex + 2),
             ]
-            console.log(cellValues);
+            
             if (CountValues(cellValues, 'X') == 5) {
                 return true;
             }
@@ -203,6 +203,47 @@ function IsGameFinished() {
 
         }
 
+    }
+
+    // átlós ellenőrzés balról jobbra
+    for (let rowIndex = 2; rowIndex < GRIDSIZE-2; rowIndex++) {
+        for (let colIndex = 2; colIndex < GRIDSIZE-2; colIndex++) {
+            let cellValues = [
+                GetCellValue(rowIndex-2,colIndex-2),
+                GetCellValue(rowIndex-1,colIndex-1),
+                GetCellValue(rowIndex,colIndex),
+                GetCellValue(rowIndex+1,colIndex+1),
+                GetCellValue(rowIndex+2,colIndex+2),
+            ]
+            
+            if (CountValues(cellValues, 'X') == 5) {
+                return true;
+            }
+            if (CountValues(cellValues, 'O') == 5) {
+                return true;
+            }
+        }
+        
+    }
+    // átlós ellenőrzés jobbról balra
+    for (let rowIndex = 2; rowIndex < GRIDSIZE-2; rowIndex++) {
+        for (let colIndex = 2; colIndex < GRIDSIZE-2; colIndex++) {
+            let cellValues = [
+                GetCellValue(rowIndex-2,colIndex+2),
+                GetCellValue(rowIndex-1,colIndex+1),
+                GetCellValue(rowIndex,colIndex),
+                GetCellValue(rowIndex+1,colIndex-1),
+                GetCellValue(rowIndex+2,colIndex-2),
+            ]
+            
+            if (CountValues(cellValues, 'X') == 5) {
+                return true;
+            }
+            if (CountValues(cellValues, 'O') == 5) {
+                return true;
+            }
+        }
+        
     }
 
     return false;
