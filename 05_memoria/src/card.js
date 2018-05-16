@@ -1,32 +1,41 @@
 class Card {
     constructor(value, element) {
+        this.value = value;
         this.element = element;
         this.color = 'black';
-        console.log(element);
+        this.resolved = false;
+        this.UpdateColor();
+        this.blocked = 'false';
+
         this.element.addEventListener('click', () => {
-            console.log(this);
             this.OnClick();
         });
-        this.UpdateColor();
+
     }
 
-    OnClick(){
-        console.log('OnClick történt');
+    OnClick() {
         this.ToggleColor();
         this.TriggerCardClick();
     }
 
-    ToggleColor(){
+    ToggleColor() {
         this.color = (this.color == 'black') ? 'white' : 'black';
         this.UpdateColor();
     }
 
-    UpdateColor(){
+    UpdateColor() {
         this.element.style.backgroundColor = this.color;
     }
 
-    TriggerCardClick(){
-        let event = new CustomEvent('cardClick', {detail:this});
+    TriggerCardClick() {
+        let event = new CustomEvent('cardClick', {
+            detail: this
+        });
         window.dispatchEvent(event);
+    }
+
+    SetResolved() {
+        this.resolved = true;
+        this.element.style.visibility = 'hidden';
     }
 }
