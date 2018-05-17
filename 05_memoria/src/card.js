@@ -11,9 +11,21 @@ class Card {
             this.OnClick();
         });
 
+        window.addEventListener('gameBlocked', () => {
+            this.blocked = true;
+        });
+        window.addEventListener('gameUnBlocked', () => {
+            this.blocked = false;
+        });
+
+        this.UpdateColor();
+
     }
 
     OnClick() {
+        if (this.blocked) {
+            return;
+        }
         this.ToggleColor();
         this.TriggerCardClick();
     }

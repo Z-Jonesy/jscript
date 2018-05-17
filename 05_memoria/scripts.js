@@ -45,6 +45,7 @@ function RenderGrid() {
         tableGrid.appendChild(newRow);
 
     }
+    TriggerGameUnBlocked();
 }
 
 
@@ -66,20 +67,32 @@ function OnCardClick(event) {
     activeCards.push(clickedCard);
 
     // ha két aktív kártyánk van
-    if (activeCards.length > 2) {
-        if (activeCards[0].value == activeCards[1]) {
+    if (activeCards.length >= 2) {
+        TriggerGameBlocked();
+
+        if (activeCards[0].value == activeCards[1].value) {
             console.log('egyenlő');
-            while (acrd = activeCards.pop()) {
+            while (card = activeCards.pop()) {
                 card.SetResolved();
             }
+            TriggerGameUnBlocked();
 
         } else {
             setTimeout(function () {
                 while (card = activeCards.pop()) {
                     card.ToggleColor();
                 }
+                TriggerGameUnBlocked();
             }, 1000);
 
         }
     }
+}
+
+function TriggerGameBlocked() {
+    window.dispatchEvent(new Event('gameBlocked'));
+}
+
+function TriggerGameUnBlocked() {
+    window.dispatchEvent(new Event('gameUnBlocked'));
 }
